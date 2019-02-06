@@ -178,9 +178,35 @@ steps:
 ![[Select Repository]](./_img/azure-pipeline-select-repository.png)
 
 ---
+
 There are several options for selecting a repository source. For this example we’ll select Azure Repos Git and accept the defaults for the Team Project, Repository and Branch then select Continue.
 
 ![[Select Source]](./_img/select-repository-source.png)
+
+On the Select template blade, at the top you'll see a link to start with an Empty job, click Empty Job.
+On the Tasks page, here you will start selecting the build tasks needed.
+Give the build task a descriptive name. To the right of Agent job 1 select the + sign to add a build step. **You will use the + sign every time you want to add a task. Tasks can be moved in order by dragging and dropping them in the correct sequence.**
+Click on the build filter and select MSBuild for your first task. Click the ellipses to the right of Project and navigate to the project for the build. Use the default values for the rest of the settings.
+
+![[MSBuild Task]](./_img/azure-pipeline-msbuild-task.png)
+
+The next task to add will be Copy Files to. Leave the default for the Display name for now. Use the ellipses to locate your Source folder for the project. Enter `**\*.json` into the Contents text box. This will filter looking for only the two .json template files in your project folder. Set the Target Folder to `$(build.artifactstagingdirectory)`. Under Advanced, check the boxes for Clean Target Folder and Overwrite. Under Control Option, Enabled should be check by default and make sure Run this task is set to `Only when all previous tasks have succeeded`.
+
+![[Copy Files to task]](./_img/azure-pipeline-copy-files-task.png)
+
+---
+
+The final task to add will be Publish Build Artifact. For the task settings ensure that Path to publish is set to `$(Build.ArtifactStagingDirectory)`, Artifact name is drop and Artifact publish location is `Azure Pipelines/TFS`. The rest of the settings you can take the defaults. When finished, click the Save and queue then select Save and queue again to run the build.
+
+![[Publish Artifact task]](./_img/azure-pipeline-publish-artifact-task.png)
+
+After the build has been queued, you should see a build number. Click the build number link to follow the build as it is running. Once the build finishes and has succeeded, you are now ready to create the release to deploy your web application to Azure.
+
+![[Build Job Results]](./_img/azure-pipeline-build-job.png)
+
+## Creating Pipeline Release
+
+
 
 Release:
 Azure Resource Group Deployment:
